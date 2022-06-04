@@ -12,3 +12,6 @@ RESOLUTION = 30
 
 # path to the file where the result is saved
 OUTPUT_FILENAME = "out.png"
+
+# turn on to see plasma effect
+GREYSCALE = False

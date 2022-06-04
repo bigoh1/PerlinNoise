@@ -1,13 +1,11 @@
 import numpy as np
 import png
+from PIL import Image
 from utility import *
-from params import N, STEP, RESOLUTION, OUTPUT_FILENAME
+from params import N, STEP, RESOLUTION, OUTPUT_FILENAME, GREYSCALE
 
 origins = get_origins(N, STEP)
 gradients = get_gradients(N)
-
-f = open(OUTPUT_FILENAME, 'wb')
-w = png.Writer(RESOLUTION * N, RESOLUTION * N, greyscale=True)
 
 colors = np.zeros((RESOLUTION * N, RESOLUTION * N))
 
@@ -49,7 +47,11 @@ for xi, x in enumerate(np.linspace(0, N*STEP, RESOLUTION * N)):
 # TODO: find a way to scaling the values to [0; 1] range inside the loop
 min_colors, max_colors = np.amin(colors), np.amax(colors)
 greyscale_min, greyscale_max = 0.0, 1.0
-colors_scaled = np.uint8(scale(colors, min_colors, max_colors, greyscale_min, greyscale_max) * 255)
 
-w.write(f, colors_scaled)
-f.close()
+colors_scaled = scale(colors, min_colors, max_colors, greyscale_min, greyscale_max)
+if not GREYSCALE:
+    colors_scaled = plasma(colors_scaled)
+colors_scaled = np.uint8(colors_scaled * 255)
+
+im = Image.fromarray(colors_scaled)
+im.save(OUTPUT_FILENAME)

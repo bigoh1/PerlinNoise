@@ -1,4 +1,5 @@
 import numpy as np
+import colorsys
 
 
 def scale(x, x0, x1, y0, y1):
@@ -57,3 +58,16 @@ def near_vectors(point: np.array, source: np.array, n: int, step: int):
                        ])
 
     return result
+
+
+def plasma(colors: np.array):
+    # Assume that 0 <= colors[i][j] <= 1 for all possible i and j
+    rgb_colors = np.zeros((colors.shape[0], colors.shape[1], 3))
+
+    grey_to_rgb = lambda r: colorsys.hsv_to_rgb(r, 1, 1)
+
+    for i in range(colors.shape[0]):
+        for j in range(colors.shape[1]):
+            rgb_colors[i, j, :] = grey_to_rgb(colors[i, j])
+
+    return rgb_colors
