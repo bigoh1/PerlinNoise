@@ -5,37 +5,55 @@ def scale(x, x0, x1, y0, y1):
     return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0)
 
 
+# TODO: optimize
 def cos_interpolate(x, x0, x1, y0, y1):
     return -0.5 * (np.cos((x - x0) * np.pi / (x1 - x0)) - 1) * (y1 - y0) + y0
 
 
-def get_cell_pos(point: np.array, N, STEP):
-    xnum = min(np.floor(point[0] / STEP), max(N - 1, 0))
-    ynum = min(np.floor(point[1] / STEP), max(N - 1, 0))
+def get_cell_pos(point: np.array, n, step):
+    x_num = min(np.floor(point[0] / step), max(n - 1, 0))
+    y_num = min(np.floor(point[1] / step), max(n - 1, 0))
 
-    return int(xnum), int(ynum)
+    return int(x_num), int(y_num)
 
 
-def get_origins(point: np.array, origins: np.array, N, STEP):
-    xnum, ynum = get_cell_pos(point, N, STEP)
+def get_origins(n, step):
+    result = []
+    for j in range(n + 1):
+        result.append([])
+        for i in range(n + 1):
+            result[-1].append((step * i, step * j))
+    return np.array(result)
 
-    # TODO think a though: if we access origins[x, y] or ...[y, x] is it any different?
-    result = np.array([origins[ynum + 1, xnum],
-                       origins[ynum + 1, xnum + 1],
-                       origins[ynum, xnum + 1],
-                       origins[ynum, xnum],
+
+def get_gradients(n):
+    possible_gradients = np.array([
+        [1, 1],
+        [-1, 1],
+        [-1, -1],
+        [1, -1],
+    ])
+
+    rand_ind = np.random.randint(possible_gradients.shape[0], size=((n + 1) ** 2))
+    gradients = possible_gradients[rand_ind, :].reshape((n + 1, n + 1, 2))
+    return gradients
+
+
+def near_vectors(point: np.array, source: np.array, n: int, step: int):
+    """
+    :param point: 2d point (x, y), such that 0 <= x,y < n*step
+    :param source: either `origins` or `gradients` vector
+    :param n: size of the nxn grid.
+    :param step: width/height of a cell in the grid
+    :return: positions of origin vectors which are the vertices of a cell the point is in if `source` is `origins`;
+     otherwise the values of the vectors.
+    """
+    x_num, y_num = get_cell_pos(point, n, step)
+
+    result = np.array([source[y_num + 1, x_num],
+                       source[y_num + 1, x_num + 1],
+                       source[y_num, x_num + 1],
+                       source[y_num, x_num],
                        ])
 
-    return result
-
-
-# TODO: REFACTOR (see get_origins)
-def get_gradients(point, gradients, N, STEP):
-    xnum, ynum = get_cell_pos(point, N, STEP)
-
-    result = np.array([gradients[ynum + 1, xnum],
-                       gradients[ynum + 1, xnum + 1],
-                       gradients[ynum, xnum + 1],
-                       gradients[ynum, xnum]
-                       ])
     return result
