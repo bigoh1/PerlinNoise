@@ -5,6 +5,10 @@ def scale(x, x0, x1, y0, y1):
     return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0)
 
 
+def cos_interpolate(x, x0, x1, y0, y1):
+    return -0.5 * (np.cos((x - x0) * np.pi / (x1 - x0)) - 1) * (y1 - y0) + y0
+
+
 def get_cell_pos(point: np.array, N, STEP):
     xnum = min(np.floor(point[0] / STEP), max(N - 1, 0))
     ynum = min(np.floor(point[1] / STEP), max(N - 1, 0))

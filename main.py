@@ -59,8 +59,9 @@ for xi, x in enumerate(np.linspace(0, N*STEP, RESOLUTION * N)):
 
             top_x0, top_x1 = curr_origins[0:2, 0]
             # top_int = (top_y0 * (top_x1 - (point_x - top_x0)) + top_y1 * ((point_x - top_x0) - top_x0)) / (top_x1 - top_x0)
-            top_int = (top_y0 * (top_x1 - point_x) + top_y1 * (point_x - top_x0)) / (
-                        top_x1 - top_x0)
+            # top_int = (top_y0 * (top_x1 - point_x) + top_y1 * (point_x - top_x0)) / (
+            #             top_x1 - top_x0)
+            top_int = cos_interpolate(point_x, top_x0, top_x1, top_y0, top_y1)
 
 
             # calculate bottom interpolation
@@ -70,8 +71,9 @@ for xi, x in enumerate(np.linspace(0, N*STEP, RESOLUTION * N)):
 
             bottom_x0, bottom_x1 = curr_origins[2:, 0]
             # bottom_int = (bottom_y0 * (bottom_x1 - (point_x-bottom_x0)) + bottom_y1 * ((point_x - bottom_x0) - bottom_x0)) / (bottom_x1 - bottom_x0)
-            bottom_int = (bottom_y0 * (bottom_x1 - point_x) + bottom_y1 * (
-                        point_x - bottom_x0)) / (bottom_x1 - bottom_x0)
+            # bottom_int = (bottom_y0 * (bottom_x1 - point_x) + bottom_y1 * (
+            #             point_x - bottom_x0)) / (bottom_x1 - bottom_x0)
+            bottom_int = cos_interpolate(point_x, bottom_x0, bottom_x1, bottom_y0, bottom_y1)
 
             # calculate the third interpolation
             point_y = point[1]
@@ -80,7 +82,8 @@ for xi, x in enumerate(np.linspace(0, N*STEP, RESOLUTION * N)):
 
             x0, x1 = curr_origins[0, 1], curr_origins[2, 1]
             # final_int = (y0 * (x1 - (point_y-x1)) + y1 * ((point_y-x1) - x0)) / (x1 - x0)
-            final_int = (y0 * (x1 - point_y) + y1 * (point_y - x0)) / (x1 - x0)
+            # final_int = (y0 * (x1 - point_y) + y1 * (point_y - x0)) / (x1 - x0)
+            final_int = cos_interpolate(point_y, x0, x1, y0, y1)
 
             # TODO: try swapping i and j
             colors[xi, yi] = final_int
