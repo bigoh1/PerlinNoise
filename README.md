@@ -6,6 +6,7 @@ Implementation of 2d Perlin noise
 
 ### TODO:  
 * [X] Create plasma effect
+* [ ] Rewrite in Rust
 * [ ] Animate
 * [ ] Optimize cosine interpolation
 * [ ] Write doc strings
